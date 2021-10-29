@@ -1,0 +1,15 @@
+{% extends 'BLOG/base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+{% if request.user.is_authenticated %}
+<h4>You are already logged in</h4>
+
+{%else%}
+<form action="" method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form_user | crispy }}
+  <button type="submit" class="btn btn-info">Register</button>
+</form>
+
+{%endif%}
+{% endblock content %}
