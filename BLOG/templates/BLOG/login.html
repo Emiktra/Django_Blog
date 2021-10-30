@@ -6,11 +6,19 @@
 <h4>You are already logged in</h4>
 
 {%else%}
+<h2>Login</h2>
 <form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
   {% csrf_token %} 
   {{ form | crispy }}
-  <button type="submit" class="btn btn-info">Register</button>
+  <div>
+    <button type="submit" class="btn btn-info">Register</button>
+    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+  </div>
 </form>
+<div>
+  <p>Need an account?</p>
+  <a href="{% url 'register' %}">Sign up Now</a>
+</div>
 
 {%endif%}
 {% endblock content %}
