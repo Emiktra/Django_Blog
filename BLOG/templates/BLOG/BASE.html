@@ -11,8 +11,37 @@
     <link rel="stylesheet" href=" {% static 'BLOG/css/base.css' %}  " />
   </head>
   <body>
+
+
+
   {%include "BLOG/navbar.html" %}
+
+  {% if messages %}
+    <ul class="messages">
+    {#% changes color of displayed message based on message level %#}
+    {% for message in messages %}
+
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO  %}
+      <p class="alert alert-info">{{message}}</p>
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR  %}
+      <p class="alert alert-danger">{{message}}</p>
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS  %}
+      <p class="alert alert-success">{{message}}</p>
+      {% endif %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.WARNING  %}
+      <p class="alert alert-warning">{{message}}</p>
+      {% endif %}
+
+    {% endfor %}
+    </ul>
+  {% endif %}
+
   {% block content %}{% endblock content %}
+
+
+
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>

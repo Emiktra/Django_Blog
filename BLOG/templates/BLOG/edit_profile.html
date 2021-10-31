@@ -1,0 +1,15 @@
+{% extends 'BLOG/base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+{% if request.user.is_authenticated %}
+ <form method="post" enctype="multipart/form-data">
+  {% csrf_token %} {{ form | crispy }}
+  <button type="submit" class="btn btn-info">Update Profile</button>
+</form>
+
+{%else%}
+<h1>You are not logged in</h1>
+
+{% endif %}
+{% endblock content %}

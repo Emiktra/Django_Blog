@@ -3,9 +3,9 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordResetForm
 from django.http.response import BadHeaderError, HttpResponse
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from .forms import UserCreationForm
+from .forms import UserCreationForm, UserEditForm, PostBlogForm, CommentForm
 from django.db.models.query_utils import Q
-from .models import User
+from .models import User, Post, Comment
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
@@ -15,7 +15,11 @@ from django.contrib import messages
 
 # Create your views here.
 def home(request):
-  return render(request, "BLOG/home.html")
+  posts=Post.objects.all().filter(status="2")
+  context={
+    "posts":posts
+  }
+  return render(request, "BLOG/home.html", context)
 
 def Userregister(request):
   form=UserCreationForm()
@@ -51,7 +55,7 @@ def Userlogout(request):
 
 def profile(request):
   data={
-    "data": request.user
+    "user": request.user
   }
   return render(request, 'BLOG/profile.html', context=data)
 
@@ -85,8 +89,42 @@ def reset_password(request):
             return HttpResponse('Invalid header found')
           messages.success(request, 'A message with reset password instructions has been sent to your inbox.')
           return redirect("done/")
-      messages.error(request, 'An invalid email has been entered.')
-  context ={
-    "form":form
-  }
+      else:
+        messages.error(request, "This email doesn't exist")
+  context ={ "form":form }
   return render(request, 'BLOG/password_reset_templates/password_reset.html',context)
+
+def edit_profile(request, id):
+  user=User.objects.get(id=request.user.id)
+  form = UserEditForm(instance=user)
+  if request.method == "POST":
+    form = UserEditForm(request.POST, request.FILES, instance=user)
+    if form.is_valid():
+      form.save()
+      return redirect("profile")
+  context={
+    "form":form,
+    "user":user,
+  }
+  return render(request, "BLOG/edit_profile.html", context)
+
+def create_post(request):
+  form=PostBlogForm()
+  if request.method=="POST":
+    form = PostBlogForm(request.POST, request.FILES)
+    if form.is_valid():
+      post=form.save(commit=False)
+      post.publisher=request.user
+      post.save()
+      return redirect("home")
+  context={
+    "form":form,
+  }
+  return render(request, 'BLOG/create_post.html', context)
+
+def post_detail(request, id):
+  post=Post.objects.get(id=id)
+  context={
+    "post":post,
+  }
+  return render(request,'BLOG/post_detail.html', context)
