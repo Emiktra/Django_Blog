@@ -1,6 +1,54 @@
 {% extends 'BLOG/base.html' %}
 {% block content %}
+{% load crispy_forms_tags %}
+
+
+<div>
   <div>
-    {{post}}
+    <img src="/media/{{post.publisher.profile_pic}}" alt="publisher profile pic">
+    <h3>{{post.publisher.username}}</h3>
   </div>
-{% endblock content %}
+  <div>
+    <p>{{post.post_date | timesince}} ago</p>
+  </div>
+</div>
+<div><img src="/media/{{post.image}}" alt="blog img"></div>
+<h3>{{post.title}}</h3>
+<div>
+  <div><p>likes</p><p>{{post.likes}}</p></div>
+  <div><p>views</p><p>{{post.views}}</p></div>
+  <div><p>comments</p><p>{{post.comments.count}}</p></div>
+</div>
+<div>{{post.content}}</div>
+
+{% if request.user.is_authenticated %}
+
+<div>like btn comes here</div>
+<div>
+  <form method="POST">
+    {% csrf_token %} {{form | crispy}}
+    <button type="submit">Post</button>
+  </form>
+</div>
+
+{%endif%}
+<div>
+  {% for comment in post.comments.all %}
+    <div>
+      <div>
+        <img src="/media/{{comment.publisher.profile_pic}}" alt="blog img">
+        <h4>{{comment.publisher.username}}</h4>
+      </div>
+      <p>{{comment}}</p>
+    </div>
+  {% endfor %}
+</div>
+{% if request.user.id == post.publisher.id %}
+<div>
+  <a class="btn btn-danger" href="{% url 'delete_post' post.id %}">Delete</a>
+  <a class="btn btn-warning" href="{% url 'edit_post' post.id %}">Edit</a>
+</div>
+{%endif%}
+
+
+{% endblock content %} 

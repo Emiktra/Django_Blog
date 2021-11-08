@@ -1,0 +1,11 @@
+{% extends 'BLOG/base.html' %}
+{% block content %}
+  <form action="" , method="POST">
+    {% csrf_token %}
+      <h3>Confirm the Following action for {{post}}</h3>
+      <h4>Delete post {{post}} ?</h4>
+    <button class="btn btn-danger" type="submit">Delete</button>
+  </form>
+
+<a class="btn btn-warning" href="{% url 'home'%}">Cancel</a>
+{% endblock content %}

@@ -5,11 +5,7 @@
 <div>
 
   <div>
-    {% if request.user.profile_pic %}
     <img src="{{user.profile_pic.url}}" alt="Profile Picture" style="width:150px">
-    {% else %}
-    <img src="/media/profile_pics/profile_pic_standard.png" alt="Profile Picture" style="width:100px">
-    {% endif %}
   </div>
 
   <div>

@@ -4,7 +4,7 @@ from django.db.models.fields import IntegerField
 
 # Create your models here.
 class User(AbstractUser):
-  profile_pic =models.ImageField(upload_to="profile_pics",blank=True, default="default.png") #set default it's broken at the moment
+  profile_pic =models.ImageField(upload_to="profile_pics", default="profile_pics/default_profile.png", blank=True)
   date_joined = models.DateTimeField(auto_now_add=True)
   bio = models.TextField(max_length=2000, default="My bio")
 
@@ -14,7 +14,7 @@ class User(AbstractUser):
 class Post(models.Model):
   title=models.CharField(max_length=75)
   content=models.TextField(max_length=10000)
-  image=models.ImageField(upload_to="post_pics", blank=True)
+  image=models.ImageField(upload_to="post_pics", blank=True, default="post_pics/default_post.png")
   post_date=models.DateTimeField(auto_now_add=True)
   views=models.IntegerField(default=0)
   likes=models.IntegerField(default=0)

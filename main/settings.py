@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     "BLOG",
 
     # 3rd party apps
-    # 'django.contrib.auth',
     'crispy_forms',
     # 'django.contrib.contenttypes',
 ]

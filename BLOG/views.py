@@ -54,6 +54,7 @@ def Userlogout(request):
   return redirect('home')
 
 def profile(request):
+  print(request.user.profile_pic)
   data={
     "user": request.user
   }
@@ -104,7 +105,6 @@ def edit_profile(request, id):
       return redirect("profile")
   context={
     "form":form,
-    "user":user,
   }
   return render(request, "BLOG/edit_profile.html", context)
 
@@ -123,8 +123,38 @@ def create_post(request):
   return render(request, 'BLOG/create_post.html', context)
 
 def post_detail(request, id):
+  form=CommentForm()
   post=Post.objects.get(id=id)
+  if request.method=="POST":
+    print(request.POST)
+    form=CommentForm(request, data=request.POST)
+    if form.is_valid():
+      form.save()
+  context={
+    "post":post,
+    "form":form,
+  }
+  return render(request,'BLOG/post_detail.html', context)
+
+def delete_post(request,id):
+  post=Post.objects.get(id=id)
+  if request.method == "POST":
+    post.delete()
+    return redirect("home")
   context={
     "post":post,
   }
-  return render(request,'BLOG/post_detail.html', context)
+  return render(request, "BLOG/delete_post.html",context)
+
+def edit_post(request,id):
+  post=Post.objects.get(id=id)
+  form=PostBlogForm(instance=post)
+  if request.method=="POST":
+    form=PostBlogForm(request.POST, request.FILES, instance=post)
+    if form.is_valid():
+      form.save()
+      return redirect(f"/post_detail/{id}")
+  context={
+    "form":form,
+  }
+  return render(request, "BLOG/edit_post.html",context)
