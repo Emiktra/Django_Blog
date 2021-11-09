@@ -1,27 +1,80 @@
 {% extends 'BLOG/base.html' %}
 {% block content %}
-  <h1>Djangalactic Blog</h1>
-  <div>
+<div class="home-container">
+  <h1 class="HomePage-Title text-secondary">Djangalactic Blog</h1>
+  <div class="HomePublicFeed">
     {% for post in posts %}
-      <a href="{% url 'post_detail' post.id %}">
+    {% comment %}
+    <a href="{% url 'post_detail' post.id %}">
+      <div>
+        <img src="/media/{{post.image}}" alt="post pic" width="300px"> #
+      </div>
+      <div>
+        <img src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">#
+        <h4>{{post.publisher.username}}</h4>#
+      </div>
+      <div>
+        <h3>{{post.title}}</h3>#
+        <code>{{post.post_date | timesince}}</code>#
+      </div>
+      <div>
+        <div><p>likes</p><p>{{post.likes.count}}</p></div>
+        <div><p>views</p><p>{{post.views}}</p></div>
+        <div><p>comments</p><p>{{post.comments.count}}</p></div>
+      </div>
+    </a>
+    {% endcomment %}
+
+
+
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="/media/{{post.image}}" alt="post pic">
+      <div class="card-body">
+        <h5 class="card-title">{{post.title}}</h5>
         <div>
-          <img src="/media/{{post.image}}" alt="post pic" width="300px">
-        </div>
-        <div>
-          <img src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">
+          <a href="{% url 'post_detail' post.id %}">
+            <img src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">
+          </a>
           <h4>{{post.publisher.username}}</h4>
         </div>
+      </div>
+      <ul class="list-group list-group-flush">
         <div>
-          <h3>{{post.title}}</h3>
-          <code>{{post.post_date | timesince}}</code> {#%  not done  %#}
-        </div>
-        <div>
-          <div><p>likes</p><p>{{post.likes}}</p></div>
+          <div><p>likes</p><p>{{post.likes.count}}</p></div>
           <div><p>views</p><p>{{post.views}}</p></div>
           <div><p>comments</p><p>{{post.comments.count}}</p></div>
         </div>
-      </a>
-      <hr>
+        <code>{{post.post_date | timesince}}</code>
+      </ul>
+    </div>
     {% endfor %}
   </div>
+  
+  {% if drafts %}  
+  <h1 class="text-secondary draft_title">Drafts</h1>
+  <h6 class="text-secondary">Only visible for you</h6>
+  <div class="HomePrivateFeed">
+    {% for draft in drafts %}
+    <a href="{% url 'post_detail' draft.id %}">
+      <div>
+        <img src="/media/{{draft.image}}" alt="draft pic" width="300px">
+      </div>
+      <div>
+        <img src="/media/{{draft.publisher.profile_pic}}" alt="publisher pic" width="30px">
+        <h4>{{draft.publisher.username}}</h4>
+      </div>
+      <div>
+        <h3>{{draft.title}}</h3>
+        <code>{{draft.post_date | timesince}}</code>
+      </div>
+      <div>
+        <div><p>likes</p><p>{{draft.likes.count}}</p></div>
+        <div><p>views</p><p>{{draft.views}}</p></div>
+        <div><p>comments</p><p>{{draft.comments.count}}</p></div>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
 {% endblock content %}

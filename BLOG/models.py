@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models.fields import IntegerField
 
 # Create your models here.
 class User(AbstractUser):
@@ -17,7 +16,7 @@ class Post(models.Model):
   image=models.ImageField(upload_to="post_pics", blank=True, default="post_pics/default_post.png")
   post_date=models.DateTimeField(auto_now_add=True)
   views=models.IntegerField(default=0)
-  likes=models.IntegerField(default=0)
+  likes=models.ManyToManyField(User)
   publisher = models.ForeignKey(User,on_delete=models.CASCADE, default=None, related_name="publisher")
   status=models.CharField(max_length=30, choices=(("1","Draft"),("2","Published")),default=("1","Draft"))
   category=models.CharField(max_length=30,choices=(("1","Software Engineering"),("2","Comedy"),("3","News"),("4","Informative")), default=("5","Personal"))

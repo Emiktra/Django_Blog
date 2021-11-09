@@ -16,9 +16,10 @@ from django.contrib import messages
 # Create your views here.
 def home(request):
   posts=Post.objects.all().filter(status="2")
-  context={
-    "posts":posts
-  }
+  context={ "posts":posts }
+  if not request.user.is_anonymous:
+    drafts=Post.objects.all().filter(publisher=request.user).filter(status="1")
+    context["drafts"]=drafts
   return render(request, "BLOG/home.html", context)
 
 def Userregister(request):
@@ -54,7 +55,6 @@ def Userlogout(request):
   return redirect('home')
 
 def profile(request):
-  print(request.user.profile_pic)
   data={
     "user": request.user
   }
@@ -125,11 +125,27 @@ def create_post(request):
 def post_detail(request, id):
   form=CommentForm()
   post=Post.objects.get(id=id)
-  if request.method=="POST":
-    print(request.POST)
-    form=CommentForm(request, data=request.POST)
+
+  #increases view count
+  if request.method=="GET":
+    post.views=post.views+1
+    post.save()
+  #handles comments
+  if request.method=="POST" and 'commentBtn' in request.POST:
+    form=CommentForm(request.POST)
     if form.is_valid():
-      form.save()
+      comment=form.save(commit=False)
+      comment.connected_post=post
+      comment.publisher=request.user
+      comment.save()
+  #likes
+  if request.method=="POST" and 'likeBtn' in request.POST:
+    try:
+      post.likes.get(id=request.user.id) # user in database?
+      post.likes.remove(request.user) # remove user
+    except:
+      post.likes.add(request.user) # else add user to likes list
+
   context={
     "post":post,
     "form":form,
@@ -140,7 +156,7 @@ def delete_post(request,id):
   post=Post.objects.get(id=id)
   if request.method == "POST":
     post.delete()
-    return redirect("home")
+    return redirect('home')
   context={
     "post":post,
   }
@@ -156,5 +172,6 @@ def edit_post(request,id):
       return redirect(f"/post_detail/{id}")
   context={
     "form":form,
+    "post":post,
   }
   return render(request, "BLOG/edit_post.html",context)

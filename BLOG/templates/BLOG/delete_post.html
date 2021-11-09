@@ -1,11 +1,17 @@
 {% extends 'BLOG/base.html' %}
 {% block content %}
+{% if request.user.is_authenticated %}
+<div class="password-reset-success-container">
   <form action="" , method="POST">
     {% csrf_token %}
       <h3>Confirm the Following action for {{post}}</h3>
       <h4>Delete post {{post}} ?</h4>
-    <button class="btn btn-danger" type="submit">Delete</button>
+    <button class="btn btn-danger my-2 hover" type="submit">Delete</button>
   </form>
 
-<a class="btn btn-warning" href="{% url 'home'%}">Cancel</a>
+  <a class="btn btn-warning" href="{% url 'post_detail' post.id%}">Cancel</a>
+</div>
+{% else %}
+<p>How did you get here?</p>
+{% endif %}
 {% endblock content %}

@@ -2,10 +2,19 @@
 {% block content %}
 {% load crispy_forms_tags %}
 
-
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %} {{ form | crispy }}
-  <button type="submit" class="btn btn-success">Update Post</button>
-</form>
-
+{% if request.user.is_authenticated %}
+<div class="password-reset-success-container px-4 py-5">
+  {% if request.user == post.publisher %}
+  <h2 class="text-secondary mb-4">Edit post {{post}}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form | crispy }}
+    <button type="submit" class="btn btn-success hover">Update Post</button>
+  </form>
+  {%else%}
+  <p class="text-danger">you cannot edit this post</p>
+  {% endif %}
+  {% else %}
+  <p class="text-warning">You aren't logged in</p>
+  {% endif %}
+</div>
 {% endblock content %}
