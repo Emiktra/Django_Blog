@@ -1,33 +1,75 @@
-{% extends 'BLOG/base.html' %}
+{% extends 'BLOG/BASE.html' %}
 {% block content %}
 {% load static %}
 {% if request.user.is_authenticated %}
-<div>
+<div class="profilePageMainContainer">
 
-  <div>
-    <img src="{{user.profile_pic.url}}" alt="Profile Picture" style="width:150px">
+
+  <div  class="profile-page-container">
+    <h3 class="profile-section-title">General Info</h3>
+    <ul style="display: flex;flex-flow: column nowrap;">
+      <img src="{{user.profile_pic.url}}" alt="Profile Picture"
+      style="width: 80px;height: 80px;border-radius: 5px;margin: 5px 0;">
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Username:</h2>
+        <li class="prf-secUl-elem-info">{{user.username}}</li>
+      </div>
+      <div class="prf-secUl-elemCont__for__Bio">
+        <h2 class="prf-secUl-elem-title"> Bio:</h2>
+        <li class="prf-secUl-elem-info">{{user.bio}}</li>
+      </div>
+    </ul>
   </div>
 
-  <div>
-    <h4>{{user.username}}</h4>
-    <p>First Name: {{user.first_name}}</p>
-    <p>Last Name: {{user.last_name}}</p>
-    <p>Email:{{user.email}}</p>
+  <div  class="profile-page-container">
+    <h3 class="profile-section-title">Private Info</h3>
+    <ul style="display: flex;flex-flow: column nowrap;">
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> First name:</h2>
+        <li class="prf-secUl-elem-info">{{user.first_name}}</li>
+      </div>
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Last name:</h2>
+        <li class="prf-secUl-elem-info">{{user.last_name}}</li>
+      </div>
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Account date:</h2>
+        <li class="prf-secUl-elem-info">{{user.date_joined}}</li>
+      </div>
+    </ul>
   </div>
-  <div>
-    <p>Account Creation Date: {{user.date_joined}}</p>
+
+  <div class="profile-page-container">
+    <h3 class="profile-section-title">Statistics</h3>
+    <ul style="display: flex;flex-flow: column nowrap;">
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Liked posts:</h2>
+        <li class="prf-secUl-elem-info">{{liked_post_count}}</li>
+      </div>
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Comment count:</h2>
+        <li class="prf-secUl-elem-info">{{user.comments.count}}</li>
+      </div>
+      <div class="prf-secUl-elemCont">
+        <h2 class="prf-secUl-elem-title"> Post count:</h2>
+        <li class="prf-secUl-elem-info">{{user.publisher.count}}</li>
+      </div>
+    </ul>
   </div>
-  <div>
-    <p>{{user.bio}}</p>
+
+  <div  class="profile-page-container">
+    <h3 class="profile-section-title">Settings</h3>
+    <ul style="display: flex;flex-flow: column nowrap;">
+      <div class="prf-secUl-elemCont__settings__">
+        <h2 class="prf-secUl-elem-title"> Edit Profile:</h2>
+        <a href="{% url 'edit_profile' user.id %}" class="hover btn btn-info">Edit Profile</a>
+      </div>
+    </ul>
   </div>
+
+
 </div>
-<div>
-  <a class="btn btn-info" href="{% url 'edit_profile' user.id %}">Edit Profile</a>
-</div>
-
-
 {%else%}
-<h1>You are not logged in</h1>
-
+<p class="text-warning">You aren't logged in</p>
 {%endif%}
 {% endblock content %}

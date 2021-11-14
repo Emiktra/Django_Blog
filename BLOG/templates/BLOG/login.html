@@ -1,24 +1,25 @@
-{% extends 'BLOG/base.html' %}
+{% extends 'BLOG/BASE.html' %}
 {% block content %}
 {% load crispy_forms_tags %}
 
-{% if request.user.is_authenticated %}
-<h4>You are already logged in</h4>
+<div class="password-reset-success-container">
+  {% if request.user.is_authenticated %}
+  <h4 class="text-warning">You are already logged in</h4>
+  {%else%}
 
-{%else%}  
-<h2>Login</h2>
-<form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
-  {% csrf_token %} 
-  {{ form | crispy }}
-  <div>
-    <button type="submit" class="btn btn-info">Log In</button>
-    <a href="{% url 'password_reset' %}">Forgot Password?</a>
+  <h2>Login</h2>
+  <form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %} 
+    {{ form | crispy }}
+    <div>
+      <button type="submit" class="btn btn-info hover">Log In</button>
+      <a href="{% url 'password_reset' %}">Forgot Password?</a>
+    </div>
+  </form>
+  <div class="login-register-need-have-account">
+    <p>Need an account?</p>
+    <a href="{% url 'register' %}">Sign up Now</a>
   </div>
-</form>
-<div>
-  <p>Need an account?</p>
-  <a href="{% url 'register' %}">Sign up Now</a>
+  {%endif%}
 </div>
-
-{%endif%}
 {% endblock content %}

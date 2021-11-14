@@ -1,20 +1,21 @@
-{% extends 'BLOG/base.html' %}
+{% extends 'BLOG/BASE.html' %}
 {% block content %}
 {% load crispy_forms_tags %}
-
-{% if request.user.is_authenticated %}
-<h4>You are already logged in</h4>
-
-{%else%}
-<h2>Register Form</h2>
-<form action="" method="post" enctype="multipart/form-data">
-  {% csrf_token %} {{ form_user | crispy }}
-  <button type="submit" class="btn btn-info">Register</button>
-</form>
-<div>
-  <p>Already have an account? </p>
-  <a href="{% url 'login' %}">Sign In</a>
+<div class="password-reset-success-container">
+  {% if request.user.is_authenticated %}
+  <h4>You are already logged in</h4>
+  
+  {%else%}
+  <h2>Register Form</h2>
+  <form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %} {{ form_user | crispy }}
+    <button type="submit" class="btn btn-info">Register</button>
+  </form>
+  <div class="login-register-need-have-account">
+    <p>Already have an account? </p>
+    <a href="{% url 'login' %}">Sign In</a>
+  </div>
+  
+  {%endif%}
 </div>
-
-{%endif%}
 {% endblock content %}

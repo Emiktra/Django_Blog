@@ -1,59 +1,63 @@
-{% extends 'BLOG/base.html' %}
+{% extends 'BLOG/BASE.html' %}
 {% block content %}
 {% load crispy_forms_tags %}
 
-
-<div>
-  <div>
-    <img src="/media/{{post.publisher.profile_pic}}" alt="publisher profile pic">
-    <h3>{{post.publisher.username}}</h3>
-  </div>
-  <div>
-    <p>{{post.post_date | timesince}} ago</p>
-  </div>
-</div>
-<div><img src="/media/{{post.image}}" alt="blog img"></div>
-<h3>{{post.title}}</h3>
-<div>
-  <div><p>likes</p><p>{{post.likes.count}}</p></div>
-  <div><p>views</p><p>{{post.views}}</p></div>
-  <div><p>comments</p><p>{{post.comments.count}}</p></div>
-</div>
-<div>{{post.content}}</div>
-
-{% if request.user.is_authenticated %}
-
-<div>
-  <form method="post">
-    {% csrf_token %} <button type="submit" name="likeBtn">Like</button>
-  </form>
-</div>
-<div>
-  <form method="POST">
-    {% csrf_token %} {{form | crispy}}
-    <button type="submit" name="commentBtn">Post</button>
-  </form>
-</div>
-
-{%endif%}
-<div>
-  {% for comment in post.comments.all %}
-    <div>
-      <div>
-        <img src="/media/{{comment.publisher.profile_pic}}" alt="blog img">
-        <h4>{{comment.publisher.username}}</h4>
-        <p>{{comment.post_date | timesince}}</p>
-      </div>
-      <p>{{comment.content}}</p>
+<div class="post-detail-mainContainer"><div class="post-detail-container">
+  <div class="blog-detail-profile-and-date">
+    <div class="details-profile-and-name-container">
+      <img class="img" style="border-radius: 10px;" src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">
+      <h4 style="margin-left: 5px;">{{post.publisher.username}}</h4>
     </div>
-  {% endfor %}
+    <p style="margin: 0; padding: 5px;">{{post.post_date | timesince}} ago</p>
+  </div>
+  <div><img style="width: 100%;" src="/media/{{post.image}}" alt="blog img"></div>
+  <h3 style="padding: 10px 0;">{{post.title}}</h3>
+  <div class="Blog-likes-comments-views-container">
+    <div class="Blog-likes-comments-views"><i class="far fa-heart"></i>
+      <p>{{post.likes.count}}</p></div>
+    <div class="Blog-likes-comments-views"><i class="fas fa-eye"></i>
+    <p>{{post.views}}</p></div>
+  <div class="Blog-likes-comments-views"><i class="fas fa-comment-alt"></i>
+    <p>{{post.comments.count}}</p></div>
+  </div>
+  <div style="border-bottom: 1px solid rgba(0, 0, 0, 0.325); margin-bottom: 10px;"></div>
+  <div class="post-detail-content-container">{{post.content}}</div>
+    
+  {% if request.user.is_authenticated %}
+    
+    <form method="post">
+      {% csrf_token %} <button type="submit" class="hover btn bg-danger text-white" name="likeBtn">
+      <i class="far fa-heart"></i></button>
+    </form>
+  <div style="border-bottom: 1px solid rgba(0, 0, 0, 0.325); margin: 10px 0;"></div>
+  <div>
+    <form method="POST">
+      {% csrf_token %} {{form | crispy}}
+      <button class="hover btn btn-success" type="submit" name="commentBtn">Post</button>
+    </form>
+  </div>
+ 
+  {%endif%}
+  <div style="border-top: 1px solid rgba(0, 0, 0, 0.325); margin-top: 15px;">
+    {% for comment in post.comments.all %}
+      <div class="details-comment">
+        <div class="details-profile-and-name-container">
+          <img class="img" style="border-radius: 10px;" src="/media/{{comment.publisher.profile_pic}}" alt="comment publisher pic" width="30px">
+          <h4 style="margin-left: 5px;">{{comment.publisher.username}}</h4>
+          <p style="padding: 5px; margin: 0;">{{comment.post_date | timesince}}</p>
+        </div>
+        <p>{{comment.content}}</p>
+      </div>
+    {% endfor %}
+  </div>
+  {% if request.user.id == post.publisher.id %}
+  <div style="border-top: 1px solid rgba(0, 0, 0, 0.325); margin-top: 15px;">
+  <div class="mt-2">
+    <a class="btn btn-danger" href="{% url 'delete_post' post.id %}">Delete</a>
+    <a class="btn btn-warning" href="{% url 'edit_post' post.id %}">Edit</a>  
+  </div>
+  {%endif%}
 </div>
-{% if request.user.id == post.publisher.id %}
-<div>
-  <a class="btn btn-danger" href="{% url 'delete_post' post.id %}">Delete</a>
-  <a class="btn btn-warning" href="{% url 'edit_post' post.id %}">Edit</a>
-</div>
-{%endif%}
 
 
 {% endblock content %} 

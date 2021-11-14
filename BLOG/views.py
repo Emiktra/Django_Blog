@@ -11,6 +11,7 @@ from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 # Create your views here.
@@ -55,8 +56,10 @@ def Userlogout(request):
   return redirect('home')
 
 def profile(request):
+  liked_post_count = Post.objects.filter(likes=request.user)
   data={
-    "user": request.user
+    "user": request.user,
+    "liked_post_count":liked_post_count.count,
   }
   return render(request, 'BLOG/profile.html', context=data)
 
@@ -138,6 +141,7 @@ def post_detail(request, id):
       comment.connected_post=post
       comment.publisher=request.user
       comment.save()
+      return HttpResponseRedirect(request.path_info)
   #likes
   if request.method=="POST" and 'likeBtn' in request.POST:
     try:
@@ -145,6 +149,7 @@ def post_detail(request, id):
       post.likes.remove(request.user) # remove user
     except:
       post.likes.add(request.user) # else add user to likes list
+    return HttpResponseRedirect(request.path_info)
 
   context={
     "post":post,

@@ -1,48 +1,27 @@
-{% extends 'BLOG/base.html' %}
+{% extends 'BLOG/BASE.html' %}
 {% block content %}
 <div class="home-container">
   <h1 class="HomePage-Title text-secondary">Djangalactic Blog</h1>
-  <div class="HomePublicFeed">
+  <div class="HomeFeed">
     {% for post in posts %}
-    {% comment %}
-    <a href="{% url 'post_detail' post.id %}">
-      <div>
-        <img src="/media/{{post.image}}" alt="post pic" width="300px"> #
-      </div>
-      <div>
-        <img src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">#
-        <h4>{{post.publisher.username}}</h4>#
-      </div>
-      <div>
-        <h3>{{post.title}}</h3>#
-        <code>{{post.post_date | timesince}}</code>#
-      </div>
-      <div>
-        <div><p>likes</p><p>{{post.likes.count}}</p></div>
-        <div><p>views</p><p>{{post.views}}</p></div>
-        <div><p>comments</p><p>{{post.comments.count}}</p></div>
-      </div>
-    </a>
-    {% endcomment %}
-
-
-
-    <div class="card" style="width: 18rem;">
+    <div class="card" style="width: 18rem; margin: 5px 2px;">     
       <img class="card-img-top" src="/media/{{post.image}}" alt="post pic">
-      <div class="card-body">
-        <h5 class="card-title">{{post.title}}</h5>
-        <div>
-          <a href="{% url 'post_detail' post.id %}">
-            <img src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">
-          </a>
+      <a class="blog-title" href="{% url 'post_detail' post.id %}">
+      <div class="BlogCardContent">
+        {{post.title}}</a>
+        <div class="blog-publisher-container">
+          <img class="img" style="border-radius: 10px;" src="/media/{{post.publisher.profile_pic}}" alt="publisher pic" width="30px">
           <h4>{{post.publisher.username}}</h4>
         </div>
       </div>
-      <ul class="list-group list-group-flush">
-        <div>
-          <div><p>likes</p><p>{{post.likes.count}}</p></div>
-          <div><p>views</p><p>{{post.views}}</p></div>
-          <div><p>comments</p><p>{{post.comments.count}}</p></div>
+      <ul class="list-group list-group-flush BlogCardContent">
+        <div class="Blog-likes-comments-views-container">
+          <div class="Blog-likes-comments-views"><i class="far fa-heart"></i>
+            <p>{{post.likes.count}}</p></div>
+          <div class="Blog-likes-comments-views"><i class="fas fa-eye"></i>
+            <p>{{post.views}}</p></div>
+          <div class="Blog-likes-comments-views"><i class="fas fa-comment-alt"></i>
+            <p>{{post.comments.count}}</p></div>
         </div>
         <code>{{post.post_date | timesince}}</code>
       </ul>
@@ -53,26 +32,30 @@
   {% if drafts %}  
   <h1 class="text-secondary draft_title">Drafts</h1>
   <h6 class="text-secondary">Only visible for you</h6>
-  <div class="HomePrivateFeed">
+  <div class="HomeFeed">
     {% for draft in drafts %}
-    <a href="{% url 'post_detail' draft.id %}">
-      <div>
-        <img src="/media/{{draft.image}}" alt="draft pic" width="300px">
+    <div class="card" style="width: 18rem; margin: 5px 2px;">     
+      <img class="card-img-top" src="/media/{{draft.image}}" alt="post pic">
+      <a class="blog-title" href="{% url 'post_detail' draft.id %}">
+      <div class="BlogCardContent">
+        {{draft.title}}</a>
+        <div class="blog-publisher-container">
+          <img class="img" style="border-radius: 10px;" src="/media/{{draft.publisher.profile_pic}}" alt="publisher pic" width="30px">
+          <h4>{{draft.publisher.username}}</h4>
+        </div>
       </div>
-      <div>
-        <img src="/media/{{draft.publisher.profile_pic}}" alt="publisher pic" width="30px">
-        <h4>{{draft.publisher.username}}</h4>
-      </div>
-      <div>
-        <h3>{{draft.title}}</h3>
+      <ul class="list-group list-group-flush BlogCardContent">
+        <div class="Blog-likes-comments-views-container">
+          <div class="Blog-likes-comments-views"><i class="far fa-heart"></i>
+            <p>{{draft.likes.count}}</p></div>
+          <div class="Blog-likes-comments-views"><i class="fas fa-eye"></i>
+            <p>{{draft.views}}</p></div>
+          <div class="Blog-likes-comments-views"><i class="fas fa-comment-alt"></i>
+            <p>{{draft.comments.count}}</p></div>
+        </div>
         <code>{{draft.post_date | timesince}}</code>
-      </div>
-      <div>
-        <div><p>likes</p><p>{{draft.likes.count}}</p></div>
-        <div><p>views</p><p>{{draft.views}}</p></div>
-        <div><p>comments</p><p>{{draft.comments.count}}</p></div>
-      </div>
-    </a>
+      </ul>
+    </div>
     {% endfor %}
   </div>
   {% endif %}

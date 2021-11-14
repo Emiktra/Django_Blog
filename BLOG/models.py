@@ -8,7 +8,7 @@ class User(AbstractUser):
   bio = models.TextField(max_length=2000, default="My bio")
 
   def __str__(self):
-    return f"{self.id} - {self.username}"
+    return self.username
 
 class Post(models.Model):
   title=models.CharField(max_length=75)
@@ -21,12 +21,12 @@ class Post(models.Model):
   status=models.CharField(max_length=30, choices=(("1","Draft"),("2","Published")),default=("1","Draft"))
   category=models.CharField(max_length=30,choices=(("1","Software Engineering"),("2","Comedy"),("3","News"),("4","Informative")), default=("5","Personal"))
   def __str__(self):
-    return f"{self.id} - {self.title}"
+    return self.title
 
 class Comment(models.Model):
-  publisher=models.ForeignKey(User,on_delete=models.CASCADE, default=None)
+  publisher=models.ForeignKey(User,on_delete=models.CASCADE, default=None, related_name="comments")
   connected_post=models.ForeignKey(Post,on_delete=models.CASCADE, default=None, related_name="comments")
   content=models.TextField(max_length=2000)
   post_date=models.DateTimeField(auto_now_add=True)
   def __str__(self):
-    return f"{self.publisher} - {self.connected_post}"
+    return self.publisher
